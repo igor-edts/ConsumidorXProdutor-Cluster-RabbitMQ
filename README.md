@@ -1,1 +1,0 @@
-Arquivo inicial para criação do repositório.
