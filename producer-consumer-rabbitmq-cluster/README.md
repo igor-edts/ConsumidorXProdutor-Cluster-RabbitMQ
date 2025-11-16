@@ -16,6 +16,8 @@ O projeto é composto por múltiplos módulos:
 
 - `common-lib`: Biblioteca compartilhada contendo modelos e utilitários comuns
 - `producer-service-1`: Serviço produtor que gera produtos aleatórios
+- `consumer_service`: Serviço que consome os produtos
+- `cluster-orchestrator`: Serviço principal que chama os demais serviços
 
 ## Pré-requisitos
 
@@ -46,10 +48,10 @@ cd producer-consumer-rabbitmq-cluster
 mvn clean install
 ```
 
-4. Execute o serviço produtor:
+4. Execute o serviço Central:
 
 ### Orquestrador (2 produtores + 4 consumidores)
-Para subir tudo de uma vez num único processo (logs centralizados):
+Para subir todos os processos ao mesmo tempo
 ```bash
 mvn -pl cluster-orchestrator -am package
 java -jar cluster-orchestrator/target/cluster-orchestrator-1.0-SNAPSHOT.jar
@@ -62,6 +64,7 @@ java -jar cluster-orchestrator/target/cluster-orchestrator-1.0-SNAPSHOT.jar
 - Alterna entre produtos do Tipo 1 e Tipo 2
 - Simula tempo de produção variável
 - Registra logs de produção
+- Consumers consomem os produtos com o dobro do tempo de criação
 
 ## Configuração
 
