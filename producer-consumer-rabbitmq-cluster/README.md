@@ -47,8 +47,12 @@ mvn clean install
 ```
 
 4. Execute o serviço produtor:
+
+### Orquestrador (2 produtores + 4 consumidores)
+Para subir tudo de uma vez num único processo (logs centralizados):
 ```bash
-java -jar producer-service-1/target/producer-service-1-1.0-SNAPSHOT.jar
+mvn -pl cluster-orchestrator -am package
+java -jar cluster-orchestrator/target/cluster-orchestrator-1.0-SNAPSHOT.jar
 ```
 
 ## Funcionalidades

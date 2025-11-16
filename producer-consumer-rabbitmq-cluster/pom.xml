@@ -19,6 +19,7 @@
         <module>common-lib</module>
         <module>producer-service-1</module>
         <module>consumer_service</module>
+        <module>cluster-orchestrator</module>
     </modules>
 
     <properties>
