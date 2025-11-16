@@ -3,10 +3,15 @@ package com.example.producer1.service;
 import com.example.common.model.Product;
 import com.example.common.model.ProductType;
 import com.example.producer1.config.RabbitMQConfig;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Random;
 import java.util.UUID;
@@ -16,6 +21,7 @@ import java.util.UUID;
 public class ProductProducerService {
     private final RabbitTemplate rabbitTemplate;
     private final Random random = new Random();
+    private static final Logger log = LoggerFactory.getLogger(ProductProducerService.class);
 
     public ProductProducerService(RabbitTemplate rabbitTemplate) {
         this.rabbitTemplate = rabbitTemplate;

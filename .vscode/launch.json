@@ -1,0 +1,28 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        },
+        {
+            "type": "java",
+            "name": "ConsumerApplication",
+            "request": "launch",
+            "mainClass": "com.example.consumer.ConsumerApplication",
+            "projectName": "consumer_service"
+        },
+        {
+            "type": "java",
+            "name": "Producer1Application",
+            "request": "launch",
+            "mainClass": "com.example.producer1.Producer1Application",
+            "projectName": "producer-service-1"
+        }
+    ]
+}
