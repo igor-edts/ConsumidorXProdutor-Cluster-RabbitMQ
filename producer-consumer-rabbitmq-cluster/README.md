@@ -1,14 +1,15 @@
 # Producer Consumer RabbitMQ Cluster
 
-Este é um projeto demonstrativo de um sistema produtor-consumidor utilizando RabbitMQ em cluster. O projeto utiliza Spring Boot e está configurado com as tecnologias mais recentes.
+Este é um projeto demonstrativo de um sistema produtor-consumidor utilizando RabbitMQ em cluster.
 
 ## Tecnologias Utilizadas
 
 - Java 21 (LTS)
-- Spring Boot 3.2.0
-- Spring AMQP (RabbitMQ)
-- Maven
-- Lombok
+- Spring Boot 3.5.7 (última versão de patch do 3.5.x)
+- Spring Framework 6.2.12
+- Spring AMQP 3.2.8 (RabbitMQ)
+- Maven 3.9+
+- Lombok 1.18.38
 
 ## Estrutura do Projeto
 
@@ -34,7 +35,18 @@ O projeto utiliza duas filas principais:
 
 ## Como Executar
 
-## Modo 1
+**Para um guia passo a passo completo, consulte [GUIA_EXECUCAO.md](GUIA_EXECUCAO.md)**
+
+Este guia inclui:
+- ✅ Modo 1: Execução Local com RabbitMQ
+- ✅ Modo 2: Execução via Docker Compose
+- ✅ Entendimento da arquitetura
+- ✅ Monitoramento e logs
+- ✅ Troubleshooting
+
+## Execução Rápida
+
+### Modo 1: Local
 1. Clone o repositório:
 ```bash
 git clone https://github.com/igor-edts/ConsumidorXProdutor-Cluster-RabbitMQ.git
@@ -107,6 +119,14 @@ O projeto está configurado para utilizar os recursos mais recentes do Java 21, 
 - Sequenced Collections
 - Virtual Threads
 - String Templates (Preview)
+
+## Validação de Segurança
+
+✅ **Spring Boot 3.5.7 - Zero CVEs**
+
+O projeto foi atualizado para Spring Boot 3.5.7 com validação completa de segurança via OWASP Dependency-Check. Nenhuma vulnerabilidade conhecida foi detectada nas dependências.
+
+Consulte [SECURITY_VALIDATION.md](SECURITY_VALIDATION.md) para detalhes completos.
 
 ## Licença
 
