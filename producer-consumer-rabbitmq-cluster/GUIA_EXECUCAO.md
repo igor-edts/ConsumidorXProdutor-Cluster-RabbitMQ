@@ -1,461 +1,290 @@
-# 🚀 Guia Completo de Execução - Producer Consumer RabbitMQ Cluster
+# Guia de Execução - Rodando o Projeto
 
-## 📋 Índice
-1. [Pré-requisitos](#pré-requisitos)
-2. [Modo 1: Execução Local com RabbitMQ](#modo-1-execução-local-com-rabbitmq)
-3. [Modo 2: Execução via Docker Compose](#modo-2-execução-via-docker-compose)
-4. [Entendendo a Arquitetura](#entendendo-a-arquitetura)
-5. [Monitoramento e Logs](#monitoramento-e-logs)
-6. [Troubleshooting](#troubleshooting)
+Este guia vai te ajudar a colocar a aplicação em funcionamento. Escolha a forma que mais faz sentido pra você!
 
----
+## O Que Você Vai Precisar
 
-## 🔧 Pré-requisitos
+### Opção 1: Rodando localmente (no seu computador)
 
-### Para Modo 1 (Local)
-- **Java 21 ou superior** 
-  ```bash
-  java -version
-  # Deve exibir Java 21+
-  ```
-- **Maven 3.6.3 ou superior**
-  ```bash
-  mvn -version
-  # Deve exibir Maven 3.6.3+
-  ```
-- **RabbitMQ Server rodando localmente** (porta 5672)
-  - Windows: Baixar em https://www.rabbitmq.com/download.html
-  - macOS: `brew install rabbitmq`
-  - Linux: `sudo apt-get install rabbitmq-server`
+Você vai precisar de:
+- **Java 21** - Se não souber o que é, instale daqui: https://www.oracle.com/java/technologies/downloads/
+- **Maven** - Instalador em: https://maven.apache.org/download.cgi
+- **RabbitMQ** - A fila de mensagens da aplicação. Baixe em: https://www.rabbitmq.com/download.html
 
-### Para Modo 2 (Docker)
-- **Docker Desktop instalado**
-  ```bash
-  docker --version
-  docker-compose --version
-  ```
-
----
-
-## 🏃 Modo 1: Execução Local com RabbitMQ
-
-### Passo 1: Instalar e Iniciar RabbitMQ
-
-**Windows:**
+Para verificar se já tem tudo:
 ```bash
-# 1. Baixar e instalar RabbitMQ
-# 2. Verificar se está rodando (task manager)
-# 3. Acessar http://localhost:15672
-#    Usuário: guest
-#    Senha: guest
+java -version
+mvn -version
 ```
 
-**macOS/Linux:**
+Se aparecer um número de versão, você já tem instalado!
+
+### Opção 2: Usando Docker (Mais fácil!)
+
+Você só precisa:
+- **Docker Desktop** - Baixe em: https://www.docker.com/products/docker-desktop
+
+Ou na linha de comando:
 ```bash
-# Iniciar RabbitMQ
+docker --version
+docker-compose --version
+```
+
+---
+
+## Rodando Localmente (no seu computador)
+
+### Passo 1: Inicie o RabbitMQ
+
+O RabbitMQ é como um "carteiro" que entrega as mensagens entre produtores e consumidores.
+
+**Se você está no Windows:**
+- Procure por "RabbitMQ Service" no Menu Iniciar
+- Clique para iniciar (se não estiver iniciado)
+- Abra no navegador: http://localhost:15672
+- Usuário: guest
+- Senha: guest
+
+**Se você está no Mac ou Linux:**
+```bash
 rabbitmq-server
-
-# Ou em background
-sudo service rabbitmq-server start
 ```
+E abra no navegador: http://localhost:15672
 
-### Passo 2: Clonar e Entrar no Projeto
+### Passo 2: Pegue o código do projeto
 
 ```bash
-# Clone o repositório
 git clone https://github.com/igor-edts/ConsumidorXProdutor-Cluster-RabbitMQ.git
-
-# Entre no diretório
 cd producer-consumer-rabbitmq-cluster
-
-# Checkout na branch com o upgrade
 git checkout upgrade/spring-boot-3.5.x
 ```
 
-### Passo 3: Compilar o Projeto
+### Passo 3: Prepare a aplicação
+
+Este comando baixa todas as dependências (bibliotecas) que a aplicação precisa:
 
 ```bash
-# Compilar todos os módulos
 mvn clean install
-
-# Esperado: BUILD SUCCESS
 ```
 
-**Saída esperada:**
-```
-[INFO] Building producer-consumer-rabbitmq-cluster 1.0-SNAPSHOT
-[INFO] ✓ common-lib
-[INFO] ✓ producer-service-1
-[INFO] ✓ consumer_service
-[INFO] ✓ cluster-orchestrator
-[INFO] BUILD SUCCESS
-```
+Espere ele terminar. Quando ver "BUILD SUCCESS" é porque funcionou!
 
-### Passo 4: Compilar o Orquestrador
+### Passo 4: Compile só o que vai rodar
 
 ```bash
-# Compilar apenas o cluster-orchestrator
 mvn -pl cluster-orchestrator -am package
 ```
 
-### Passo 5: Executar o Orquestrador
+### Passo 5: Coloque a aplicação para funcionar!
 
 ```bash
-# Executar o orquestrador (2 produtores + 4 consumidores)
 java -jar cluster-orchestrator/target/cluster-orchestrator-1.0-SNAPSHOT.jar
 ```
 
-**Saída esperada no console:**
+Você vai ver aparecer coisas assim na tela:
 ```
-[INFO] Starting ClusterOrchestratorApplication
-...
-[INFO] Starting producer-1 on localhost:8081
-[INFO] Starting producer-2 on localhost:8082
-[INFO] Starting consumer-1 on localhost:8083
-[INFO] Starting consumer-2 on localhost:8084
-[INFO] Starting consumer-3 on localhost:8085
-[INFO] Starting consumer-4 on localhost:8086
-...
 [producer-1] Produto produzido: abc123 do tipo TYPE_1 em 3000 ms
 [consumer-1] Produto consumido: abc123 do tipo TYPE_1 em 6000 ms
 ```
 
-### Passo 6: Monitorar a Execução
+Se aparecer isso, significa que está funcionando! 
 
-**Console RabbitMQ Management:**
-- Abra: http://localhost:15672
-- Usuário: `guest`
-- Senha: `guest`
+### Passo 6: Veja funcionando no navegador
 
-**Visualizações úteis:**
-- Abas: Queues → Visualizar filas `product.type1` e `product.type2`
-- Ver mensagens sendo processadas em tempo real
+Abra: http://localhost:15672
+- Usuário: guest
+- Senha: guest
+
+Lá você vê:
+- **Queues**: As filas com as mensagens esperando
+- **Connections**: Quantas conexões estão ativas
+- **Channels**: Os canais de comunicação
 
 ---
 
-## 🐳 Modo 2: Execução via Docker Compose
+## Usando Docker (Mais Fácil!)
 
-### Passo 1: Preparar o Ambiente
+### Passo 1: Pegue o código
 
 ```bash
-# Clone o repositório
 git clone https://github.com/igor-edts/ConsumidorXProdutor-Cluster-RabbitMQ.git
-
-# Entre no diretório
 cd producer-consumer-rabbitmq-cluster
-
-# Checkout na branch com o upgrade (se necessário)
 git checkout upgrade/spring-boot-3.5.x
 ```
 
-### Passo 2: Construir e Iniciar os Containers
+### Passo 2: Coloque pra rodar!
+
+Este comando faz tudo sozinho - baixa as imagens, instala, e inicia:
 
 ```bash
-# Construir as imagens e iniciar os containers
 docker-compose up --build
+```
 
-# Para rodar em background
+Você vai ver um monte de linhas aparecendo. Não se preocupe, é normal!
+
+Se quiser rodar em background (sem ver os logs):
+```bash
 docker-compose up -d --build
 ```
 
-**Saída esperada:**
-```
-Creating rabbitmq ... done
-Creating cluster-orchestrator ... done
-Attaching to rabbitmq, cluster-orchestrator
-rabbitmq                 | Starting RabbitMQ 3-management...
-cluster-orchestrator     | Starting ClusterOrchestratorApplication
-...
-```
-
-### Passo 3: Verificar Status dos Containers
+### Passo 3: Veja os containers rodando
 
 ```bash
-# Listar containers rodando
 docker-compose ps
-
-# Esperado:
-# NAME                      STATUS
-# rabbitmq                  Up X seconds
-# cluster-orchestrator      Up X seconds
 ```
 
-### Passo 4: Acessar RabbitMQ Management
+Você vai ver algo assim:
+```
+NOME                    STATUS
+rabbitmq                Up 5 seconds
+cluster-orchestrator    Up 5 seconds
+```
 
-- URL: http://localhost:15672
-- Usuário: `guest`
-- Senha: `guest`
+### Passo 4: Abra no navegador
 
-### Passo 5: Ver Logs em Tempo Real
+Vá para: http://localhost:15672
+- Usuário: guest
+- Senha: guest
+
+Lá você vê tudo funcionando!
+
+### Passo 5: Veja os logs
+
+Para ver o que está acontecendo:
 
 ```bash
-# Logs do orquestrador
-docker-compose logs cluster-orchestrator -f
-
-# Logs do RabbitMQ
-docker-compose logs rabbitmq -f
-
-# Logs de ambos
+# Ver tudo
 docker-compose logs -f
+
+# Ou só o orquestrador
+docker-compose logs cluster-orchestrator -f
 ```
 
-### Passo 6: Parar os Containers
+### Passo 6: Parar tudo
 
 ```bash
-# Parar e remover containers
 docker-compose down
-
-# Parar apenas
-docker-compose stop
-
-# Remover volumes também
-docker-compose down -v
 ```
 
 ---
 
-## 🏗️ Entendendo a Arquitetura
+## Como Funciona Por Baixo dos Panos
 
-### Componentes
+Tenha em mente que o projeto tem estes personagens:
 
-```
-┌─────────────────────────────────────────────────────┐
-│         Cluster Orchestrator (Main)                 │
-│  Inicia 2 Produtores + 4 Consumidores               │
-└───────────────┬─────────────────────────────────────┘
-                │
-        ┌───────┴───────┐
-        │               │
-    ┌───▼───────┐   ┌──▼─────────┐
-    │ Producers │   │ Consumers  │
-    │ (2x)      │   │ (4x)       │
-    └───┬───────┘   └──┬─────────┘
-        │               │
-        └───────┬───────┘
-                │
-        ┌───────▼─────────┐
-        │   RabbitMQ      │
-        │ 2 Queues:       │
-        │ • product.type1 │
-        │ • product.type2 │
-        └─────────────────┘
-```
-
-### Fluxo de Dados
+1. **Produtores** - Criam "produtos" (mensagens) a cada segundo
+2. **RabbitMQ** - A fila que armazena as mensagens
+3. **Consumidores** - Pegam as mensagens e processam
 
 ```
-1. PRODUÇÃO (a cada 1 segundo)
-   ├─ Gera produto aleatório (TYPE_1 ou TYPE_2)
-   ├─ Tipo 1: 3 segundos de produção
-   ├─ Tipo 2: 5 segundos de produção
-   └─ Envia para fila RabbitMQ
-
-2. CONSUMO
-   ├─ Consumer aguarda mensagens na fila
-   ├─ Tipo 1: 6 segundos de consumo (3 * 2)
-   ├─ Tipo 2: 10 segundos de consumo (5 * 2)
-   └─ Registra nos logs quando consome
-
-3. BALANCEAMENTO
-   └─ RabbitMQ distribui entre 4 consumidores
+Produtores                RabbitMQ                Consumidores
+    │                      Fila 1                      │
+    ├─ Produto 1 ──────────▶ product.type1 ──────────▶ Consumidor 1
+    ├─ Produto 2 ──────────▶ product.type2 ──────────▶ Consumidor 2
+    ├─ Produto 3 ──────────▶ product.type1 ──────────▶ Consumidor 3
+    ├─ Produto 4 ──────────▶ product.type2 ──────────▶ Consumidor 4
+    │                                   
+    └─ (e por aí vai...)
 ```
 
-### Módulos do Projeto
+### O tempo que cada coisa leva
 
-| Módulo | Função | Porta |
-|--------|--------|-------|
-| `common-lib` | Classes compartilhadas (Product, ProductType) | N/A |
-| `producer-service-1` | Serviço que produz mensagens | 8081, 8082 |
-| `consumer_service` | Serviço que consome mensagens | 8083-8086 |
-| `cluster-orchestrator` | Orquestrador que inicia tudo | N/A |
+- **Produção de Tipo 1**: 3 segundos
+- **Produção de Tipo 2**: 5 segundos
+- **Consumo de Tipo 1**: 6 segundos (o dobro)
+- **Consumo de Tipo 2**: 10 segundos (o dobro)
+
+Tudo isso roda em paralelo, então vários produtos podem estar sendo produzidos e consumidos ao mesmo tempo!
 
 ---
 
-## 📊 Monitoramento e Logs
+## Monitorando a Aplicação
 
-### Visualizar Logs do Orquestrador
+### O Que Você Vai Ver nos Logs
 
-**Padrão de log:**
+Nos logs você vê mensagens assim:
+
 ```
-[producer-1] Produto produzido: <ID> do tipo <TYPE> em <TIME> ms
-[consumer-1] Produto consumido: <ID> do tipo <TYPE> em <TIME> ms
+[producer-1] Produto produzido: abc123 do tipo TYPE_1 em 3000 ms
+[consumer-1] Produto consumido: abc123 do tipo TYPE_1 em 6000 ms
+[producer-2] Produto produzido: def456 do tipo TYPE_2 em 5000 ms
+[consumer-2] Produto consumido: def456 do tipo TYPE_2 em 10000 ms
 ```
 
-### RabbitMQ Management Console
+Isso significa que está funcionando!
 
-**Acessar filas:**
-1. Vá para http://localhost:15672
-2. Clique em "Queues"
-3. Observe:
-   - `product.type1`: Fila para produtos Tipo 1
-   - `product.type2`: Fila para produtos Tipo 2
-   - **Ready**: Mensagens aguardando consumo
-   - **Unacked**: Mensagens sendo processadas
-   - **Total**: Total de mensagens processadas
+### Dashboard do RabbitMQ
 
-### Métricas no Console
+Abra http://localhost:15672 no navegador (guest/guest)
 
-```bash
-# Para Modo Local:
-# Procure por logs como:
-[INFO] Produto produzido: c1d2e3f4 do tipo TYPE_1 em 3000 ms
-[INFO] Produto consumido: c1d2e3f4 do tipo TYPE_1 em 6000 ms
+Lá você pode ver:
 
-# Taxa esperada:
-# - 1 produto produzido por segundo por produtor
-# - 2-3 produtos consumidos por segundo (distribuído entre 4 consumers)
-```
+- **Queues**: As duas filas (`product.type1` e `product.type2`) e quantas mensagens estão esperando
+- **Connections**: Quantas conexões estão ativas
+- **Channels**: Quantos canais abertos
 
 ---
 
-## 🔍 Troubleshooting
+## Se Algo Não Funcionar
 
-### Problema: "Connection refused" - RabbitMQ não encontrado
+### "Connection refused" ou RabbitMQ não funciona
 
-**Solução:**
+Meio que a aplicação não conseguiu falar com o RabbitMQ.
+
+Verifique se o RabbitMQ está rodando:
 ```bash
-# Verificar se RabbitMQ está rodando (Local)
-# Windows: Verificar Task Manager
-# Linux/Mac: 
-ps aux | grep rabbitmq
-
-# Se não estiver rodando:
-rabbitmq-server
-
-# Ou verificar no Docker Compose:
-docker-compose ps rabbitmq
+# Abra http://localhost:15672 no navegador
+# Se não abrir, RabbitMQ não está rodando
 ```
 
-### Problema: Porta 5672 já em uso
+### Porta já está em uso
 
-**Solução:**
+Se vir "Port already in use":
+
 ```bash
-# Windows: Encontrar e matar processo
+# Windows
 netstat -ano | findstr :5672
-taskkill /PID <PID> /F
+# Depois feche o programa que está usando
 
-# Linux/Mac:
+# Mac/Linux
 lsof -i :5672
-kill -9 <PID>
-
-# Ou usar porta diferente no application.yml
+kill -9 <numero que aparecer>
 ```
 
-### Problema: Java 21 não encontrado
+### Java 21 não está instalado
 
-**Solução:**
 ```bash
-# Verificar instalação
 java -version
-
-# Se não tiver Java 21:
-# Windows: Baixar de https://www.oracle.com/java/technologies/downloads/
-# Linux: sudo apt-get install openjdk-21-jdk
-# Mac: brew install openjdk@21
-
-# Verificar JAVA_HOME
-echo $JAVA_HOME
+# Se não mostrar 21, baixe de:
+# https://www.oracle.com/java/technologies/downloads/
 ```
 
-### Problema: Maven build falha
+### Nada aparece na tela
 
-**Solução:**
+- Verifique se o RabbitMQ está rodando
+- Veja se não tem erro na compilação
+- Tente rodar de novo
+
+### Docker não funciona
+
+Certifique-se que Docker Desktop está rodando:
 ```bash
-# Limpar cache Maven
-mvn clean
-
-# Forçar download de dependências
-mvn -U clean install
-
-# Verificar versão do Maven
-mvn -version
-# Deve ser 3.6.3+
+docker --version
 ```
 
-### Problema: Nenhuma mensagem aparece nos logs
-
-**Solução:**
+Se não tiver:
 ```bash
-# Verificar se o cluster-orchestrator iniciou corretamente
-# Procure por linha como:
-# [INFO] Starting ClusterOrchestratorApplication
-
-# Verificar RabbitMQ:
-# 1. Console: http://localhost:15672
-# 2. Aba "Connections" - Deve ter múltiplas conexões
-# 3. Aba "Channels" - Deve ter múltiplos canais
-
-# Tentar aumentar log verbosity:
-# Adicionar ao application.yml:
-# logging:
-#   level:
-#     root: DEBUG
-```
-
-### Problema: Docker Container sai imediatamente
-
-**Solução:**
-```bash
-# Ver logs detalhados
-docker-compose logs cluster-orchestrator
-
-# Verificar se Dockerfile está correto
-docker build -t test .
-
-# Verificar conectividade:
-docker run -it --rm test ping rabbitmq
+# Baixe em: https://www.docker.com/products/docker-desktop
 ```
 
 ---
 
-## 📈 Performance e Otimizações
+## Ficou com Dúvida?
 
-### Configurações Recomendadas
+Você pode:
 
-```yaml
-# Aumentar número de consumidores
-cluster-orchestrator/src/main/java/com/example/orchestrator/ClusterOrchestratorApplication.java
-# Alterar: orchestrator.startConsumers(4) → orchestrator.startConsumers(8)
+1. Verificar os logs da aplicação (procure por erros vermelhos)
+2. Abrir http://localhost:15672 e ver se as filas estão criadas
+3. Tentar executar tudo do zero
 
-# Ajustar taxa de produção
-producer-service-1/src/main/java/com/example/producer1/service/ProductProducerService.java
-# Alterar: @Scheduled(fixedRate = 1000) → @Scheduled(fixedRate = 500)
-
-# Aumentar prefetch (quantidade de mensagens pré-carregadas)
-# Adicionar ao application.yml:
-spring:
-  rabbitmq:
-    listener:
-      simple:
-        prefetch: 10
-```
-
----
-
-## ✅ Checklist de Execução
-
-- [ ] Java 21+ instalado e configurado
-- [ ] Maven 3.6.3+ instalado
-- [ ] RabbitMQ instalado (para Modo 1) ou Docker (para Modo 2)
-- [ ] Repositório clonado
-- [ ] Branch `upgrade/spring-boot-3.5.x` ativa
-- [ ] `mvn clean install` executado com sucesso
-- [ ] Orquestrador iniciado
-- [ ] RabbitMQ Management acessível
-- [ ] Logs de produção/consumo aparecem
-- [ ] Fila `product.type1` e `product.type2` com mensagens
-
----
-
-## 📞 Suporte
-
-Se encontrar problemas:
-1. Verifique o [Troubleshooting](#troubleshooting)
-2. Consulte os logs (`docker-compose logs` ou console)
-3. Verifique RabbitMQ Management em http://localhost:15672
-4. Abra uma issue no repositório: https://github.com/igor-edts/ConsumidorXProdutor-Cluster-RabbitMQ/issues
-
----
-
-**Versão atualizada para Spring Boot 3.5.7** ✅  
-Data: 17 de novembro de 2025
+E pronto! Sua aplicação está funcionando! 🎉
