@@ -24,6 +24,7 @@ O projeto é composto por múltiplos módulos:
 - Java 21 ou superior
 - Maven 3.6.3 ou superior
 - RabbitMQ Server (cluster configurado)
+- Docker Desktop (opcional)
 
 ## Configuração do RabbitMQ
 
@@ -33,6 +34,7 @@ O projeto utiliza duas filas principais:
 
 ## Como Executar
 
+## Modo 1
 1. Clone o repositório:
 ```bash
 git clone https://github.com/igor-edts/ConsumidorXProdutor-Cluster-RabbitMQ.git
@@ -56,6 +58,25 @@ Para subir todos os processos ao mesmo tempo
 mvn -pl cluster-orchestrator -am package
 java -jar cluster-orchestrator/target/cluster-orchestrator-1.0-SNAPSHOT.jar
 ```
+## Modo 2 Via DOCKER
+1. Clone o repositório:
+```bash
+git clone https://github.com/igor-edts/ConsumidorXProdutor-Cluster-RabbitMQ.git
+```
+
+2. Entre no diretório do projeto:
+```bash
+cd producer-consumer-rabbitmq-cluster
+```
+3. Gere as imagens do Projeto e do RabbitMQ
+```bash
+docker compose up --build
+```
+4. Acesse no Navegador
+- http://localhost:15672
+-   Usuario: guest
+-   Senha: guest
+
 
 ## Funcionalidades
 
