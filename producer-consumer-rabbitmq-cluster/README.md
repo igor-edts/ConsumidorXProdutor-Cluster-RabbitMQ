@@ -74,9 +74,3 @@ No RabbitMQ Management (http://localhost:15672):
 - **RabbitMQ**: Suportado via Spring AMQP 3.2.8
 
 Ver [SECURITY_VALIDATION.md](SECURITY_VALIDATION.md) para mais sobre segurança.
-
-## Precisa de Ajuda?
-
-1. Verifique [GUIA_EXECUCAO.md](GUIA_EXECUCAO.md) para instruções detalhadas
-2. Veja [QUICK_START.md](QUICK_START.md) para um começo rápido
-3. Abra o Dashboard do RabbitMQ para debugar: http://localhost:15672
