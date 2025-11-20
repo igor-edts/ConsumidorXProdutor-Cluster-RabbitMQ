@@ -1,0 +1,4 @@
+com\example\producer1\config\RabbitJsonConfig.class
+com\example\producer1\Producer1Application.class
+com\example\producer1\config\RabbitMQConfig.class
+com\example\producer1\service\ProductProducerService.class
