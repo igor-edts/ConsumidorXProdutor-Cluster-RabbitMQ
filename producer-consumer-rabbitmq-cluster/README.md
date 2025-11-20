@@ -1,94 +1,85 @@
 # Producer Consumer RabbitMQ Cluster
 
-Este é um projeto que mostra como um sistema de produção e consumo de mensagens funciona usando RabbitMQ.
+Este é um projeto demonstrativo de um sistema produtor-consumidor utilizando RabbitMQ em cluster. O projeto utiliza Spring Boot e está configurado com as tecnologias mais recentes.
 
-Pense assim: **Produtores criam produtos, RabbitMQ armazena em filas, Consumidores pegam e processam.**
+## Tecnologias Utilizadas
 
-## O Que Você Precisa
+- Java 21 (LTS)
+- Spring Boot 3.2.0
+- Spring AMQP (RabbitMQ)
+- Maven
+- Lombok
 
-- **Java 21** - A linguagem de programação
-- **Maven** - Para compilar o projeto
-- **RabbitMQ** - O sistema de filas de mensagens
-- **Docker** (opcional) - Para rodar tudo junto
+## Estrutura do Projeto
 
-## Como Funciona
+O projeto é composto por múltiplos módulos:
 
-O projeto tem:
+- `common-lib`: Biblioteca compartilhada contendo modelos e utilitários comuns
+- `producer-service-1`: Serviço produtor que gera produtos aleatórios
+- `consumer_service`: Serviço que consome os produtos
+- `cluster-orchestrator`: Serviço principal que chama os demais serviços
 
-1. **2 Produtores** - Criam "produtos" (mensagens) o tempo todo
-2. **4 Consumidores** - Pegam as mensagens e processam
-3. **RabbitMQ** - A fila que armazena as mensagens entre produtores e consumidores
+## Pré-requisitos
 
-Tudo isso roda em paralelo, simulando um sistema real de processamento!
+- Java 21 ou superior
+- Maven 3.6.3 ou superior
+- RabbitMQ Server (cluster configurado)
+- Docker Desktop (opcional)
 
-## Começando Rápido
+## Configuração do RabbitMQ
 
-### Usando Docker (Mais Fácil - 2 minutos)
+O projeto utiliza duas filas principais:
+- `product.type1`: Para produtos do Tipo 1
+- `product.type2`: Para produtos do Tipo 2
 
 ## Como Executar
 
-**Para um guia passo a passo completo, consulte [GUIA_EXECUCAO.md](GUIA_EXECUCAO.md)**
-
-Este guia inclui:
-- ✅ Modo 1: Execução Local com RabbitMQ
-- ✅ Modo 2: Execução via Docker Compose
-- ✅ Entendimento da arquitetura
-- ✅ Monitoramento e logs
-- ✅ Troubleshooting
-
-## Execução Rápida
-
-### Modo 1: Local
+## Modo 1
 1. Clone o repositório:
 ```bash
 git clone https://github.com/igor-edts/ConsumidorXProdutor-Cluster-RabbitMQ.git
-cd producer-consumer-rabbitmq-cluster
-git checkout upgrade/spring-boot-3.5.x
-
-docker-compose up --build
 ```
 
-Depois abra: http://localhost:15672 (guest/guest)
-
-### Rodando no seu Computador (3-5 minutos)
-
+2. Entre no diretório do projeto:
 ```bash
-git clone https://github.com/igor-edts/ConsumidorXProdutor-Cluster-RabbitMQ.git
 cd producer-consumer-rabbitmq-cluster
-git checkout upgrade/spring-boot-3.5.x
+```
 
+3. Compile o projeto:
+```bash
 mvn clean install
+```
+
+4. Execute o serviço Central:
+
+### Orquestrador (2 produtores + 4 consumidores)
+Para subir todos os processos ao mesmo tempo
+```bash
 mvn -pl cluster-orchestrator -am package
 java -jar cluster-orchestrator/target/cluster-orchestrator-1.0-SNAPSHOT.jar
 ```
-
-Depois abra: http://localhost:15672 (guest/guest)
-
-## Passo a Passo Detalhado
-
-**Leia [GUIA_EXECUCAO.md](GUIA_EXECUCAO.md)** para um guia completo com todas as instruções!
-
-## O Que Você Vai Ver
-
-Nos logs:
-```
-[producer-1] Produto produzido: abc123 do tipo TYPE_1 em 3000 ms
-[consumer-1] Produto consumido: abc123 do tipo TYPE_1 em 6000 ms
+## Modo 2 Via DOCKER
+1. Clone o repositório:
+```bash
+git clone https://github.com/igor-edts/ConsumidorXProdutor-Cluster-RabbitMQ.git
 ```
 
-No RabbitMQ Management (http://localhost:15672):
-- Filas com as mensagens esperando
-- Conexões ativas
-- Canais abertos
+2. Entre no diretório do projeto:
+```bash
+cd producer-consumer-rabbitmq-cluster
+```
+3. Gere as imagens do Projeto e do RabbitMQ
+```bash
+docker compose up --build
+```
+4. Acesse no Navegador
+- http://localhost:15672
+-   Usuario: guest
+-   Senha: guest
 
-## Versão Atual
 
-- **Java**: 21 (LTS)
-- **Spring Boot**: 3.5.7 (atualizado e seguro - zero vulnerabilidades!)
-- **Spring Framework**: 6.2.12
-- **RabbitMQ**: Suportado via Spring AMQP 3.2.8
+## Funcionalidades
 
-Ver [SECURITY_VALIDATION.md](SECURITY_VALIDATION.md) para mais sobre segurança.
 ### Produtor (producer-service-1)
 - Gera produtos aleatórios a cada 1 segundo
 - Alterna entre produtos do Tipo 1 e Tipo 2
@@ -116,14 +107,6 @@ O projeto está configurado para utilizar os recursos mais recentes do Java 21, 
 - Sequenced Collections
 - Virtual Threads
 - String Templates (Preview)
-
-## Validação de Segurança
-
-✅ **Spring Boot 3.5.7 - Zero CVEs**
-
-O projeto foi atualizado para Spring Boot 3.5.7 com validação completa de segurança via OWASP Dependency-Check. Nenhuma vulnerabilidade conhecida foi detectada nas dependências.
-
-Consulte [SECURITY_VALIDATION.md](SECURITY_VALIDATION.md) para detalhes completos.
 
 ## Licença
 
